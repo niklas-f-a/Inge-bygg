@@ -21,5 +21,10 @@ router.get('/',
   UserController.getAll
 )
 
+router.delete('/:id',
+  Auth.admin,
+  UserController.delete
+)
+
 
 module.exports = router;

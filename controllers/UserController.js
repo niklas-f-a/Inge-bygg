@@ -46,6 +46,16 @@ module.exports = {
     }catch(error){
       next(error)
     }
+  },
+
+  async delete(req, res, next){
+    try{
+      const {id} = req.params
+      await User.deleteOne({id})
+      res.status(200).json({message: 'User is no more'})
+    }catch(error){
+      next(error)
+    }
   }
 
 };
