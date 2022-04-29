@@ -11,5 +11,10 @@ router.post('/',
   UserController.register
 )
 
+router.get('/:id',
+  Auth.admin,
+  UserController.getUser
+)
+
 
 module.exports = router;
