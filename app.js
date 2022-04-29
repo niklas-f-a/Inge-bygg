@@ -1,14 +1,20 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
-require('dotenv').config();
-const connection = require('./database/connection');
+const errorHandler = require('./error/errorHandler')
 const taskRouter = require('./routes/tasks');
 const userRouter = require('./routes/users');
 
+const connection = require('./database/connection');
+
 async function connect() {
-  await connection();
-  const PORT = process.env.PORT || 5001;
-  app.listen(PORT, () => console.log(`Running on ${PORT}`));
+  try{
+    await connection();
+    const PORT = process.env.PORT || 5001;
+    app.listen(PORT, () => console.log(`Running on ${PORT}`));
+  }catch(error){
+    console.log(error);
+  }
 }
 connect();
 
@@ -16,3 +22,4 @@ app.use(express.json());
 
 app.use('/users', userRouter);
 app.use('/tasks', taskRouter);
+app.use(errorHandler)

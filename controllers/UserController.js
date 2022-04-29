@@ -2,13 +2,12 @@ const User = require('../models/Users');
 const bcrypt = require('bcryptjs');
 
 module.exports = {
-  async login(req, res) {
-    const { email, password } = req.body;
-    console.log(req.body);
-
-    const user = await User.findOne({ email }).select('+password');
-
-    const token = bcrypt.compareSync(password, user.password);
-    console.log(user, token);
+  async login(req, res, next) {
+    try{
+      const token = await User.authenticate(req.body)
+      res.json({token})
+    }catch(error){
+      next(error)
+    }
   },
 };
