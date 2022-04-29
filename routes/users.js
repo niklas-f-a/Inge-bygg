@@ -16,5 +16,10 @@ router.get('/:id',
   UserController.getUser
 )
 
+router.get('/',
+  Auth.admin,
+  UserController.getAll
+)
+
 
 module.exports = router;
