@@ -1,5 +1,4 @@
 const User = require('../models/Users');
-const bcrypt = require('bcryptjs');
 
 module.exports = {
   async login(req, res, next) {

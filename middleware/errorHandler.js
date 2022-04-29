@@ -1,5 +1,5 @@
 const {CastError} = require('mongoose')
-const {IngeError} = require('./index')
+const {IngeError} = require('../error')
 
 
 module.exports = (error, req, res, next) => {

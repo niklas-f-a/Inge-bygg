@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
-const errorHandler = require('./error/errorHandler')
+const errorHandler = require('./middleware/errorHandler')
 const taskRouter = require('./routes/tasks');
 const userRouter = require('./routes/users');
 

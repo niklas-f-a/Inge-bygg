@@ -8,6 +8,18 @@ class InvalidCredentials extends IngeError{
   }
 }
 
+class Forbidden extends IngeError{
+  constructor(){
+    super()
+    this.message = 'Unauthorized'
+    this.status = 403
+  }
+}
 
 
-module.exports = {IngeError, InvalidCredentials}
+
+module.exports = {
+  IngeError,
+  InvalidCredentials,
+  Forbidden
+}
