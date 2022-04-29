@@ -15,20 +15,15 @@ const taskSchema = new mongoose.Schema({
   messages: [{ content: String, date: { type: Date, default: Date.now() } }],
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
     immutable: true,
   },
   updatedAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
-  client: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  worker: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-});
-
-userSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hashSync(this.password, 10);
-  next();
+  client: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  worker: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 });
 
 const Task = mongoose.model('Task', taskSchema);

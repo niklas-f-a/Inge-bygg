@@ -21,11 +21,12 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6,
     trim: true,
+    select: false,
   },
 });
 
-userSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hashSync(this.password, 10);
+userSchema.pre('save', function (next) {
+  this.password = bcrypt.hashSync(this.password, 10);
   next();
 });
 
