@@ -19,4 +19,25 @@ module.exports = {
       next(error);
     }
   },
+  async update(req, res, next) {
+    try {
+      const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+      });
+      res.status(200).json({ message: 'Task updated' });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async delete(req, res, next) {
+    try {
+      const { id } = req.params;
+      await Task.deleteOne({ id });
+      res.status(200).json({ message: 'Task deleted' });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
