@@ -8,8 +8,10 @@ router.get('/', Auth.admin, TaskController.getAll);
 
 router.get('/:id', Auth.admin, TaskController.getTask);
 
-router.delete('/:id', Auth.admin, TaskController.delete);
+router.post('/', Auth.worker, TaskController.createTask);
 
-router.patch('/:id', Auth.worker, TaskController.update);
+router.delete('/:id', Auth.admin, TaskController.deleteTask);
+
+router.patch('/:id', Auth.worker, TaskController.updateTask);
 
 module.exports = router;

@@ -19,7 +19,17 @@ module.exports = {
       next(error);
     }
   },
-  async update(req, res, next) {
+
+  async createTask(req, res, next) {
+    try {
+      const task = await Task.create(req.body);
+      res.status(200).json({ message: 'Task created' });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+  async updateTask(req, res, next) {
     try {
       const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
@@ -31,7 +41,7 @@ module.exports = {
     }
   },
 
-  async delete(req, res, next) {
+  async deleteTask(req, res, next) {
     try {
       const { id } = req.params;
       await Task.deleteOne({ id });
