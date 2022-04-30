@@ -6,8 +6,8 @@ const verify = (header, role) => {
   const token = header.replace('Bearer ', '')
   const user = jwt.verify(token, process.env.JWT_SECRET)
   if(user.role != role){
-      throw new Forbidden
-    }
+    throw new Forbidden
+  }
   return user
 }
 

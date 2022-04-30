@@ -6,6 +6,25 @@ const Auth = require('../middleware/auth')
 
 router.post('/login', UserController.login);
 
+router.post('/',
+  Auth.admin,
+  UserController.register
+)
+
+router.get('/:id',
+  Auth.admin,
+  UserController.getUser
+)
+
+router.get('/',
+  Auth.admin,
+  UserController.getAll
+)
+
+router.delete('/:id',
+  Auth.admin,
+  UserController.delete
+)
 
 
 module.exports = router;
