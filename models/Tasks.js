@@ -6,14 +6,14 @@ const taskSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    clientName: {
-      type: String,
-      required: true,
-    },
-    workerName: {
-      type: String,
-      required: true,
-    },
+    // clientName: {
+    //   type: String,
+    //   required: true,
+    // },
+    // workerName: {
+    //   type: String,
+    //   required: true,
+    // },
     imageLink: {
       type: String,
     },

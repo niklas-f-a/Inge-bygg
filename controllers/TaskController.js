@@ -23,7 +23,7 @@ module.exports = {
   async createTask(req, res, next) {
     try {
       const task = await Task.create(req.body);
-      res.status(200).json({ message: 'Task created' });
+      res.status(200).json({ message: 'Task created', task: { task } });
     } catch (error) {
       next(error);
     }
@@ -35,7 +35,7 @@ module.exports = {
         new: true,
         runValidators: true,
       });
-      res.status(200).json({ message: 'Task updated' });
+      res.status(200).json({ message: 'Task updated', task: { task } });
     } catch (error) {
       next(error);
     }
@@ -43,8 +43,7 @@ module.exports = {
 
   async deleteTask(req, res, next) {
     try {
-      const { id } = req.params;
-      await Task.deleteOne({ id });
+      await Task.findByIdAndRemove(req.params.id);
       res.status(200).json({ message: 'Task deleted' });
     } catch (error) {
       next(error);
