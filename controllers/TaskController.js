@@ -14,7 +14,10 @@ module.exports = {
   async getAll(req, res, next) {
     try {
       const tasks = await Task.find({});
-      res.status(200).json({ tasks });
+      res.status(200).json({
+        results: tasks.length,
+        tasks,
+      });
     } catch (error) {
       next(error);
     }
