@@ -1,32 +1,22 @@
+const req = require('express/lib/request');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { Forbidden } = require('../error');
 
-const verify = (header, role) => {
+const verify = (header) => {
   const token = header.replace('Bearer ', '');
   const user = jwt.verify(token, process.env.JWT_SECRET);
-  if (user.role != role) {
-    throw new Forbidden();
-  }
+
   return user;
 };
 
-module.exports = {
-  client(req, res, next) {
-    const user = verify(req.headers.authorization, 'client');
+exports.authRoles = (rolesArr) => {
+  return (req, res, next) => {
+    const user = verify(req.headers.authorization);
     req.user = user;
+    if (!rolesArr.includes(req.user.role)) {
+      throw new Forbidden();
+    }
     next();
-  },
-
-  admin(req, res, next) {
-    const user = verify(req.headers.authorization, 'admin');
-    req.user = user;
-    next();
-  },
-
-  worker(req, res, next) {
-    const user = verify(req.headers.authorization, 'worker');
-    req.user = user;
-    next();
-  },
+  };
 };
