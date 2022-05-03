@@ -6,6 +6,10 @@ const User = require('../models/Users');
 async function seed() {
   await mongoose.connect(process.env.DATABASE_URL);
 
+  await Task.collection.drop()
+  await User.collection.drop()
+
+
   const admin = await User.create({
     name: 'Kalle Admin',
     email: 'kalle@admin.com',
