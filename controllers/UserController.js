@@ -40,7 +40,13 @@ module.exports = {
 
   async getAll(req, res, next) {
     try {
-      const users = await User.find({});
+      const maxPageSize = 10
+      const page = req.query.page || 1
+      let pageSize = req.query.pageSize || 10
+      if(pageSize > maxPageSize){
+        pageSize = 10
+      }
+      const users = await User.find({}).skip((page-1)*pageSize).limit(pageSize).exec();
       res.status(200).json({
         results: users.length,
         users,
