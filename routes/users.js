@@ -8,7 +8,7 @@ router.post('/login', UserController.login);
 
 router.post('/', Auth.authRoles(['admin']), UserController.register);
 
-router.get('/:id', Auth.authRoles(['admin']), UserController.getUser);
+router.get('/:id', Auth.authRoles(['admin', 'worker']), UserController.getUser);
 
 router.get('/', Auth.authRoles(['admin']), UserController.getAll);
 

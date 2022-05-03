@@ -4,7 +4,11 @@ const TaskController = require('../controllers/TaskController');
 const Auth = require('../middleware/auth');
 //authenticate user depending on role
 
-router.get('/', Auth.authRoles(['admin']), TaskController.getAll);
+router.get(
+  '/',
+  Auth.authRoles(['worker', 'client', 'admin']),
+  TaskController.getAll
+);
 
 router.get('/:id', Auth.authRoles(['worker', 'admin']), TaskController.getTask);
 
