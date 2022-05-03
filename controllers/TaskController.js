@@ -17,9 +17,8 @@ module.exports = {
     try {
       const { content } = req.body;
       const { id } = req.params;
-
+      console.log(req.user);
       const task = await Task.findById(id);
-      console.log(task);
       task.messages.push({ content, sender: req.user.name });
       task.save();
       res.status(200).json({ message: 'Message added', task });
@@ -31,9 +30,7 @@ module.exports = {
   async getMessages(req, res, next) {
     try {
       const { id } = req.params;
-      const task = await Task.findById(id)
-        .populate('worker')
-        .populate('client');
+      const task = await Task.findById(id);
       res.status(200).json({ Messages: task.messages });
     } catch (error) {
       next(error);
