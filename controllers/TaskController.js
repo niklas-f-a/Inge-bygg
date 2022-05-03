@@ -13,12 +13,12 @@ module.exports = {
 
   async addMessage (req, res, next){
     try{
-      const {content} = req.body
+      const {content, sender} = req.body
       const {id} = req.params
 
       const task = await Task.findById(id)
       console.log(task)
-      task.messages.push({content})
+      task.messages.push({content, sender})
       task.save()
       res.status(200).json({message: "Message added", task})
     }catch(error){

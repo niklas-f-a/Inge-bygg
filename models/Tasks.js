@@ -13,7 +13,7 @@ const taskSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    messages: [{ content: String, date: { type: Date, default: Date.now() } }],
+    messages: [{ content: String, date: { type: Date, default: Date.now() }, sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } }],
     client: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     worker: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   },
