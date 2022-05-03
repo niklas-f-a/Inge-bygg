@@ -15,12 +15,12 @@ module.exports = {
 
   async addMessage(req, res, next) {
     try {
-      const { content, sender } = req.body;
+      const { content } = req.body;
       const { id } = req.params;
 
       const task = await Task.findById(id);
       console.log(task);
-      task.messages.push({ content, sender });
+      task.messages.push({ content, sender: req.user.name });
       task.save();
       res.status(200).json({ message: 'Message added', task });
     } catch (error) {
@@ -51,7 +51,6 @@ module.exports = {
         tasks = await Task.find({ worker: req.user.id })
           .populate('worker')
           .populate('client');
-        console.log(tasks);
       } else if (req.user.role == 'admin') {
         tasks = await Task.find().populate('worker').populate('client');
         console.log(tasks);

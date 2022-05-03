@@ -8,6 +8,12 @@ router.post('/login', UserController.login);
 
 router.post('/', Auth.authRoles(['admin']), UserController.register);
 
+router.get(
+  '/me',
+  Auth.authRoles(['admin', 'worker', 'client']),
+  UserController.getAccount
+);
+
 router.get('/:id', Auth.authRoles(['admin', 'worker']), UserController.getUser);
 
 router.get('/', Auth.authRoles(['admin']), UserController.getAll);
