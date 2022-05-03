@@ -14,7 +14,7 @@ module.exports.authRoles = (rolesArr) => {
     const user = verify(req.headers.authorization);
     req.user = user;
     if (!rolesArr.includes(req.user.role)) {
-      throw new Forbidden;
+      throw new Forbidden();
     }
     next();
   };
