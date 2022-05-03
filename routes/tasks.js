@@ -18,9 +18,13 @@ router.delete('/:id', Auth.authRoles(['admin']), TaskController.deleteTask);
 
 router.patch('/:id', Auth.authRoles(['worker']), TaskController.updateTask);
 
-router.put('/:id/messages',
-  Auth.authRoles(['worker', 'client'],
-  TaskController.addMessage
-))
+router.put(
+  '/:id/messages',
+  Auth.authRoles(['worker', 'client'], TaskController.addMessage)
+);
+router.get(
+  '/:id/messages',
+  Auth.authRoles(['worker', 'client'], TaskController.getMessages)
+);
 
 module.exports = router;
