@@ -13,7 +13,16 @@ module.exports = {
 
   async getAll(req, res, next) {
     try {
-      const tasks = await Task.find({});
+      let tasks;
+      if (req.user.role == 'client') {
+        tasks = await Task.find({ client: req.user._id }).populate('worker');
+      } else if (req.user.role == 'worker') {
+        tasks = await Task.find({ worker: req.user._id }).populate('client');
+        console.log(tasks);
+      } else if (req.user.role == 'admin') {
+        tasks = await Task.find();
+        console.log(tasks);
+      }
       res.status(200).json({
         results: tasks.length,
         tasks,
