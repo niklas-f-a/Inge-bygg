@@ -24,7 +24,11 @@ module.exports = {
         },
       });
     } catch (error) {
-      next(error);
+      if(error.message.indexOf("11000") != -1){
+        res.status(409).json({message: "User already exists"})
+      }else{
+        next(error);
+      }
     }
   },
 

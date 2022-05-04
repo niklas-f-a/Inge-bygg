@@ -18,6 +18,7 @@ async function connect() {
 }
 connect();
 
+app.use(express.urlencoded({extended: true}))
 app.use(express.json());
 
 app.use('/users', routes.users);
