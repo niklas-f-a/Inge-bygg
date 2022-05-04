@@ -20,7 +20,6 @@ module.exports = {
     try {
       const { content } = req.body;
       const { id } = req.params;
-      console.log(req.user);
       const task = await Task.findById(id);
       if (!task) {
         throw new ResourceNotFound('Task');

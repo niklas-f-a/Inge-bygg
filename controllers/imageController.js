@@ -7,6 +7,10 @@ module.exports = {
   async addImage(req, res, next){
     try{
       const task = await Task.findById(req.params.id)
+      if(!task){
+
+        //resource not found
+      }
       if(task.worker != req.user.id){
         throw new Forbidden()
       }
