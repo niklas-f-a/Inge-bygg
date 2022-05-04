@@ -28,6 +28,15 @@ module.exports = {
     }
   },
 
+  async getAccount(req, res, next) {
+    try {
+      const { name, email, role } = req.user;
+      res.status(200).json({ name, email, role });
+    } catch (error) {
+      next(error);
+    }
+  },
+
   async getUser(req, res, next) {
     try {
       const { id } = req.params;
@@ -40,13 +49,16 @@ module.exports = {
 
   async getAll(req, res, next) {
     try {
-      const maxPageSize = 10
-      const page = req.query.page || 1
-      let pageSize = req.query.pageSize || 10
-      if(pageSize > maxPageSize){
-        pageSize = 10
+      const maxPageSize = 10;
+      const page = req.query.page || 1;
+      let pageSize = req.query.pageSize || 10;
+      if (pageSize > maxPageSize) {
+        pageSize = 10;
       }
-      const users = await User.find({}).skip((page-1)*pageSize).limit(pageSize).exec();
+      const users = await User.find({})
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .exec();
       res.status(200).json({
         results: users.length,
         users,

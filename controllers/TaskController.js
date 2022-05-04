@@ -4,24 +4,36 @@ module.exports = {
   async getTask(req, res, next) {
     try {
       const { id } = req.params;
-      const task = await Task.findById(id).populate('worker').populate("client");
+      const task = await Task.findById(id)
+        .populate('worker')
+        .populate('client');
       res.status(200).json({ task });
     } catch (error) {
       next(error);
     }
   },
 
-  async addMessage (req, res, next){
-    try{
-      const {content} = req.body
-      const {id} = req.params
+  async addMessage(req, res, next) {
+    try {
+      const { content } = req.body;
+      const { id } = req.params;
+      console.log(req.user);
+      const task = await Task.findById(id);
+      task.messages.push({ content, sender: req.user.name });
+      task.save();
+      res.status(200).json({ message: 'Message added', task });
+    } catch (error) {
+      next(error);
+    }
+  },
 
-      const task = await Task.findById(id)
-      task.messages.push({content, sender: req.user.name})
-      task.save()
-      res.status(200).json({message: "Message added", task})
-    }catch(error){
-      next(error)
+  async getMessages(req, res, next) {
+    try {
+      const { id } = req.params;
+      const task = await Task.findById(id);
+      res.status(200).json({ Messages: task.messages });
+    } catch (error) {
+      next(error);
     }
   },
 
@@ -29,11 +41,15 @@ module.exports = {
     try {
       let tasks;
       if (req.user.role == 'client') {
-        tasks = await Task.find({ client: req.user.id }).populate('worker').populate("client");
+        tasks = await Task.find({ client: req.user.id })
+          .populate('worker')
+          .populate('client');
       } else if (req.user.role == 'worker') {
-        tasks = await Task.find({ worker: req.user.id }).populate('worker').populate("client");
+        tasks = await Task.find({ worker: req.user.id })
+          .populate('worker')
+          .populate('client');
       } else if (req.user.role == 'admin') {
-        tasks = await Task.find().populate('worker').populate("client");
+        tasks = await Task.find().populate('worker').populate('client');
       }
       res.status(200).json({
         results: tasks.length,
@@ -50,10 +66,10 @@ module.exports = {
         task: req.body.task,
         imageLink: req.body.imageLink,
         client: req.body.clientId,
-        worker: req.body.workerId
-      }
+        worker: req.body.workerId,
+      };
       const newTask = await Task.create(task);
-      res.status(200).json({ message: 'Task created', newTask  });
+      res.status(200).json({ message: 'Task created', newTask });
     } catch (error) {
       next(error);
     }
