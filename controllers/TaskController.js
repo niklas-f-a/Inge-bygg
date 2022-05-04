@@ -50,7 +50,6 @@ module.exports = {
           .populate('client');
       } else if (req.user.role == 'admin') {
         tasks = await Task.find().populate('worker').populate('client');
-        console.log(tasks);
       }
       res.status(200).json({
         results: tasks.length,
@@ -69,8 +68,8 @@ module.exports = {
         client: req.body.clientId,
         worker: req.body.workerId,
       };
-      await Task.create(task);
-      res.status(200).json({ message: 'Task created', task });
+      const newTask = await Task.create(task);
+      res.status(200).json({ message: 'Task created', newTask });
     } catch (error) {
       next(error);
     }

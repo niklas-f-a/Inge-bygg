@@ -1,4 +1,3 @@
-const req = require('express/lib/request');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { Forbidden } = require('../error');
@@ -10,7 +9,7 @@ const verify = (header) => {
   return user;
 };
 
-exports.authRoles = (rolesArr) => {
+module.exports.authRoles = (rolesArr) => {
   return (req, res, next) => {
     const user = verify(req.headers.authorization);
     req.user = user;

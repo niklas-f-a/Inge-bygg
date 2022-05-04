@@ -2,7 +2,8 @@ const { Router } = require('express');
 const router = new Router();
 const TaskController = require('../controllers/TaskController');
 const Auth = require('../middleware/auth');
-//authenticate user depending on role
+const fileUpload = require('express-fileupload');
+const imageController = require('../controllers/imageController');
 
 router.get(
   '/',
@@ -23,10 +24,18 @@ router.put(
   Auth.authRoles(['worker', 'client']),
   TaskController.addMessage
 );
+
 router.get(
   '/:id/messages',
   Auth.authRoles(['worker', 'client']),
   TaskController.getMessages
+);
+
+router.post(
+  '/:id/images',
+  fileUpload({ useTempFiles: true }),
+  Auth.authRoles(['worker', 'client']),
+  imageController.addImage
 );
 
 module.exports = router;

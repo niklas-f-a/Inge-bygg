@@ -16,10 +16,18 @@ class Forbidden extends IngeError{
   }
 }
 
+class ImageError extends IngeError{
+  constructor(status, message){
+    super()
+    this.message = message
+    this.status = status
+  }
+}
 
 
 module.exports = {
   IngeError,
   InvalidCredentials,
-  Forbidden
+  Forbidden,
+  ImageError
 }

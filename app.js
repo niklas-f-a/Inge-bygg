@@ -2,8 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const errorHandler = require('./middleware/errorHandler')
-const taskRouter = require('./routes/tasks');
-const userRouter = require('./routes/users');
+const routes = require('./routes')
+
 
 const connection = require('./database/connection');
 
@@ -20,6 +20,7 @@ connect();
 
 app.use(express.json());
 
-app.use('/users', userRouter);
-app.use('/tasks', taskRouter);
+app.use('/users', routes.users);
+app.use('/tasks', routes.tasks);
+
 app.use(errorHandler)
