@@ -45,6 +45,9 @@ module.exports = {
     try {
       const { id } = req.params;
       const user = await User.findById(id);
+      if (!user) {
+        throw new ResourceNotFound('User');
+      }
       res.status(200).json({ user });
     } catch (error) {
       next(error);
@@ -74,7 +77,10 @@ module.exports = {
 
   async delete(req, res, next) {
     try {
-      await User.findByIdAndRemove(req.params.id);
+      const user = await User.findByIdAndRemove(req.params.id);
+      if (!user) {
+        throw new ResourceNotFound('User');
+      }
       res.status(200).json({ message: 'User is no more' });
     } catch (error) {
       next(error);
