@@ -18,6 +18,7 @@ async function connect() {
 }
 connect();
 
+app.use(express.static('public'))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json());
 
@@ -25,3 +26,4 @@ app.use('/users', routes.users);
 app.use('/tasks', routes.tasks);
 
 app.use(errorHandler)
+app.use(routes._404)
