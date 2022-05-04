@@ -27,8 +27,8 @@ class Forbidden extends IngeError {
 class ResourceNotFound extends IngeError {
   constructor(payload) {
     super();
-    this.message = 404;
-    this.status = `${payload} not found.`;
+    this.status = 404;
+    this.message = `${payload} not found.`;
   }
 }
 
