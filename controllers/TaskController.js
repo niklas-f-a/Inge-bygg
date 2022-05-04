@@ -17,7 +17,6 @@ module.exports = {
     try {
       const { content } = req.body;
       const { id } = req.params;
-      console.log(req.user);
       const task = await Task.findById(id);
       task.messages.push({ content, sender: req.user.name });
       task.save();

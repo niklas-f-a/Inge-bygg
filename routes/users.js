@@ -2,22 +2,37 @@ const { Router } = require('express');
 const router = new Router();
 const UserController = require('../controllers/UserController');
 const Auth = require('../middleware/auth');
-//authenticate user depending on role, use as middleware where needed
+const Validate = require('../validators')
 
-router.post('/login', UserController.login);
+router.post('/login',
+  Validate.login,
+  UserController.login
+);
 
-router.post('/', Auth.authRoles(['admin']), UserController.register);
+router.post('/',
+  Validate.register,
+  Auth.authRoles(['admin']),
+  UserController.register
+);
 
-router.get(
-  '/me',
+router.get('/me',
   Auth.authRoles(['admin', 'worker', 'client']),
   UserController.getAccount
 );
 
-router.get('/:id', Auth.authRoles(['admin', 'worker']), UserController.getUser);
+router.get('/:id',
+  Auth.authRoles(['admin', 'worker']),
+  UserController.getUser
+);
 
-router.get('/', Auth.authRoles(['admin']), UserController.getAll);
+router.get('/',
+  Auth.authRoles(['admin']),
+  UserController.getAll
+);
 
-router.delete('/:id', Auth.authRoles(['admin']), UserController.delete);
+router.delete('/:id',
+  Auth.authRoles(['admin']),
+  UserController.delete
+);
 
 module.exports = router;
