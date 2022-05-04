@@ -1,4 +1,5 @@
 const User = require('../models/Users');
+const { MissingCredentials, ResourceNotFound } = require('../error');
 
 module.exports = {
   async login(req, res, next) {
@@ -13,6 +14,9 @@ module.exports = {
   async register(req, res, next) {
     try {
       const { name, email, password, role } = req.body;
+      if (!name || !email || !password || !role) {
+        throw new MissingCredentials(['name', 'email', 'password', 'role']);
+      }
       const user = await User.create({ name, email, password, role });
       res.status(201).json({
         message: 'User created',
@@ -24,9 +28,9 @@ module.exports = {
         },
       });
     } catch (error) {
-      if(error.message.indexOf("11000") != -1){
-        res.status(409).json({message: "User already exists"})
-      }else{
+      if (error.message.indexOf('11000') != -1) {
+        res.status(409).json({ message: 'User already exists' });
+      } else {
         next(error);
       }
     }
@@ -45,6 +49,9 @@ module.exports = {
     try {
       const { id } = req.params;
       const user = await User.findById(id);
+      if (!user) {
+        throw new ResourceNotFound('User');
+      }
       res.status(200).json({ user });
     } catch (error) {
       next(error);
@@ -74,7 +81,10 @@ module.exports = {
 
   async delete(req, res, next) {
     try {
-      await User.findByIdAndRemove(req.params.id);
+      const user = await User.findByIdAndRemove(req.params.id);
+      if (!user) {
+        throw new ResourceNotFound('User');
+      }
       res.status(200).json({ message: 'User is no more' });
     } catch (error) {
       next(error);
