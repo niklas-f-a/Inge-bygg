@@ -1,4 +1,5 @@
 const Task = require('../models/Tasks');
+const { MissingCredentials, ResourceNotFound } = require('../error');
 
 module.exports = {
   async getTask(req, res, next) {
@@ -7,6 +8,8 @@ module.exports = {
       const task = await Task.findById(id)
         .populate('worker')
         .populate('client');
+
+      // if (!task) throw new ResourceNotFound('Task');
       res.status(200).json({ task });
     } catch (error) {
       next(error);
@@ -19,6 +22,9 @@ module.exports = {
       const { id } = req.params;
       console.log(req.user);
       const task = await Task.findById(id);
+      // if (!task) {
+      //   throw new ResourceNotFound("Task");
+      // }
       task.messages.push({ content, sender: req.user.name });
       task.save();
       res.status(200).json({ message: 'Message added', task });
@@ -31,6 +37,9 @@ module.exports = {
     try {
       const { id } = req.params;
       const task = await Task.findById(id);
+      // if (!task) {
+      //   throw new ResourceNotFound("Task");
+      // }
       res.status(200).json({ Messages: task.messages });
     } catch (error) {
       next(error);
@@ -68,6 +77,12 @@ module.exports = {
         client: req.body.clientId,
         worker: req.body.workerId,
       };
+      if (!task.task || !task.client || !task.worker) {
+        throw new MissingCredentials(['task', 'clientId', 'workerId']);
+      }
+      if (!task.client) {
+        throw new ResourceNotFound('Client');
+      }
       const newTask = await Task.create(task);
       res.status(200).json({ message: 'Task created', newTask });
     } catch (error) {
@@ -81,6 +96,9 @@ module.exports = {
         new: true,
         runValidators: true,
       });
+      // if (!task) {
+      //   throw new ResourceNotFound('Task');
+      // }
       res.status(200).json({ message: 'Task updated', task: { task } });
     } catch (error) {
       next(error);
@@ -89,7 +107,8 @@ module.exports = {
 
   async deleteTask(req, res, next) {
     try {
-      await Task.findByIdAndRemove(req.params.id);
+      const task = await Task.findByIdAndRemove(req.params.id);
+      // if (!task) throw new ResourceNotFound('Task');
       res.status(200).json({ message: 'Task deleted' });
     } catch (error) {
       next(error);
