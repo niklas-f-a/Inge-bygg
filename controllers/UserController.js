@@ -19,7 +19,7 @@ module.exports = {
         message: 'User created',
         user: {
           id: user._id,
-          name: name,
+          name,
           email,
           role,
         },

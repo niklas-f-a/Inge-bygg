@@ -5,20 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="/scripts/main.js" type="module" defer></script>
   </head>
   <body>
-    <form action="/users/login" method="POST">
+    <form class="login-form">
       <input type="email" name="email" placeholder="Email" />
       <input type="password" name="password" placeholder="Password" />
       <button>Log in</button>
     </form>
     <h1>Task Messages</h1>
-
-    <form action="/tasks/:id/messages" method="PUT">
-      <input type="text" name="message" placeholder="Enter message" />
-      <button>Send Message</button>
+    <section class="tasks"></section>
+    <form>
+      <input class="message-content" type="text" name="message" placeholder="Enter message" />
+      <button class="send-message">Send Message</button>
     </form>
-
-    <section class="messages"></section>
   </body>
 </html>

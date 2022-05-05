@@ -98,6 +98,7 @@ module.exports = {
         client: req.body.clientId,
         worker: req.body.workerId,
       };
+      //check if client and worker exist exist
       const newTask = await Task.create(task);
       res.status(200).json({ message: 'Task created', newTask });
     } catch (error) {
@@ -114,7 +115,7 @@ module.exports = {
       if (!task) {
         throw new ResourceNotFound('Task');
       }
-      res.status(200).json({ message: 'Task updated', task: { task } });
+      res.status(200).json({ message: 'Task updated', task  });
     } catch (error) {
       next(error);
     }
