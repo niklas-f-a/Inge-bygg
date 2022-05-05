@@ -8,14 +8,6 @@ class InvalidCredentials extends IngeError {
   }
 }
 
-class MissingCredentials extends IngeError {
-  constructor(...arr) {
-    super();
-    this.status = 400;
-    this.message = `Missing credentials: ${arr.join(', ')} required`;
-  }
-}
-
 class Forbidden extends IngeError {
   constructor() {
     super();
@@ -40,11 +32,19 @@ class ImageError extends IngeError {
   }
 }
 
+class TokenExpired extends IngeError{
+  constructor(){
+    super()
+    this.message = 'Token expired. Please login again'
+    this.status = 401
+  }
+}
+
 module.exports = {
   IngeError,
   InvalidCredentials,
-  MissingCredentials,
   Forbidden,
   ResourceNotFound,
   ImageError,
+  TokenExpired
 };

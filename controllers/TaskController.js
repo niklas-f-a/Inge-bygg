@@ -98,12 +98,6 @@ module.exports = {
         client: req.body.clientId,
         worker: req.body.workerId,
       };
-      if (!task.task || !task.client || !task.worker) {
-        throw new MissingCredentials(['task', 'clientId', 'workerId']);
-      }
-      if (!task.client) {
-        throw new ResourceNotFound('Client');
-      }
       const newTask = await Task.create(task);
       res.status(200).json({ message: 'Task created', newTask });
     } catch (error) {
