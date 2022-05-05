@@ -4,7 +4,7 @@ const { Forbidden, TokenExpired } = require('../error');
 
 const verify = (header) => {
   const token = header.replace('Bearer ', '');
-  const user = jwt.verify(token, process.env.JWT_SECRET, (error) => {
+  const user = jwt.verify(token, process.env.JWT_SECRET, error => {
     if(error instanceof jwt.TokenExpiredError){
       throw new TokenExpired()
     }else{
