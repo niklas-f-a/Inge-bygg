@@ -1,5 +1,5 @@
 const User = require('../models/Users');
-const { MissingCredentials, ResourceNotFound } = require('../error');
+const { ResourceNotFound } = require('../error');
 
 module.exports = {
   async login(req, res, next) {
@@ -14,9 +14,6 @@ module.exports = {
   async register(req, res, next) {
     try {
       const { name, email, password, role } = req.body;
-      if (!name || !email || !password || !role) {
-        throw new MissingCredentials(['name', 'email', 'password', 'role']);
-      }
       const user = await User.create({ name, email, password, role });
       res.status(201).json({
         message: 'User created',
@@ -39,7 +36,7 @@ module.exports = {
   async getAccount(req, res, next) {
     try {
       const { name, email, role } = req.user;
-      res.status(200).json({ name, email, role });
+      res.status(200).json({ user: name, email, role });
     } catch (error) {
       next(error);
     }

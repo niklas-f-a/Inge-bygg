@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const {ImageError, Forbidden} = require('../error')
+const {ImageError, Forbidden, ResourceNotFound} = require('../error')
 const Task = require('../models/Tasks')
 
 module.exports = {
@@ -8,8 +8,7 @@ module.exports = {
     try{
       const task = await Task.findById(req.params.id)
       if(!task){
-
-        //resource not found
+        throw new ResourceNotFound('Task')
       }
       if(task.worker != req.user.id){
         throw new Forbidden()

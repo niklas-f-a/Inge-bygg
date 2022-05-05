@@ -47,7 +47,7 @@ userSchema.static("authenticate", async function({email, password}){
       email: user.email,
       role: user.role
     }
-    return jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '1w'})
+    return jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: process.env.JWT_EXPIRES})
   }else{
     throw new InvalidCredentials
   }
