@@ -45,6 +45,28 @@ module.exports = {
     }
   },
 
+  async deleteMessage(req, res, next) {
+    try {
+      const { taskId, messageId } = req.params;
+      const task = await Task.findById(taskId);
+
+      if (!task) {
+        throw new ResourceNotFound('Task');
+      }
+      const messageToDelete = task.messages.find((el) => el._id == messageId);
+
+      if (!messageToDelete) {
+        throw new ResourceNotFound('Message');
+      }
+      const index = task.messages.indexOf(messageToDelete);
+      task.messages.splice(index, 1);
+      task.save();
+      res.status(200).json({ message: 'Message deleted', task });
+    } catch (error) {
+      next(error);
+    }
+  },
+
   async getAll(req, res, next) {
     try {
       let tasks;
