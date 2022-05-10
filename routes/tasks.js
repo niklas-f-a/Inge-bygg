@@ -5,6 +5,7 @@ const Auth = require('../middleware/auth');
 const fileUpload = require('express-fileupload');
 const ImageController = require('../controllers/ImageController');
 const Validate = require('../validators');
+const { json } = require('express/lib/response');
 
 router.get('/',
   Auth.authRoles('worker', 'client', 'admin'),
@@ -50,7 +51,11 @@ router.delete('/:taskId/messages/:messageId',
 );
 
 router.post('/:id/images',
-  fileUpload({ useTempFiles: true }),// kolla upp fileupload
+  fileUpload({
+    limits: {fileSize: 5242880},
+    abortOnLimit: true,
+    responseOnLimit: JSON.stringify('File size must be less than 5mb')
+  }),
   Validate.addImage,
   Auth.authRoles('worker', 'client'),
   ImageController.addImage
