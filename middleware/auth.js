@@ -4,7 +4,7 @@ const { Forbidden } = require('../error');
 
 
 
-module.exports.authRoles = rolesArr => {
+module.exports.authRoles = (...rolesArr) => {
   return (req, res, next) => {
     const user = User.verify(req.headers.authorization);
     req.user = user;

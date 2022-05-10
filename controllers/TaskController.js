@@ -46,7 +46,7 @@ module.exports = {
     }
   },
 
-  async deleteMessage(req, res, next) {
+  async deleteMessage(req, res, next) {//kolla task/message tillhör req.user
     try {
       const { taskId, messageId } = req.params;
       const task = await Task.findById(taskId);

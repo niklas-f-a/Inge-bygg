@@ -1,9 +1,9 @@
 require('dotenv').config();
 const {createServer} = require('http')
 
+const app = require('../app.js')
 
-
-module.exports = async (app) => {
+const start = async () => {
   try{
     const httpServer = createServer(app)
     require('../websockets')(httpServer)
@@ -14,3 +14,4 @@ module.exports = async (app) => {
     console.log(error);
   }
 }
+start()

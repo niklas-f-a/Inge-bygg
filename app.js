@@ -15,4 +15,4 @@ app.use(routes._404)
 
 
 
-require('./server')(app)
+module.exports = app
