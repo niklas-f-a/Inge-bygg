@@ -5,7 +5,7 @@ const Auth = require('../middleware/auth');
 const fileUpload = require('express-fileupload');
 const ImageController = require('../controllers/ImageController');
 const Validate = require('../validators');
-const { json } = require('express/lib/response');
+
 
 router.get('/',
   Auth.authRoles('worker', 'client', 'admin'),
