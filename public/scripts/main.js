@@ -1,8 +1,8 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 let socket = io({
-  autoConnect: false
+  autoConnect: false,
+  auth: {token: null},
 })
-
 
 let headers
 const BASE_URL = 'http://localhost:5001'
@@ -18,6 +18,7 @@ const saveToken = token => {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer '+token
   }
+  socket.auth.token = token
 }
 
 
@@ -97,7 +98,7 @@ const getTask = id => {
   .then(data => {
     state.task = data.task
     renderTask(state.task)
-    socket.emit('join-room', state.task._id)
+    socket.emit('join-room', (state.task._id))
   })
 }
 
@@ -124,6 +125,16 @@ const login = (email, password) => {
   .then(res => res.json())
   .then(data => {
     saveToken(data.token)})
+  .then(() => {
+    return fetch(BASE_URL+'/users/me', {
+      method: 'GET',
+      headers: headers
+    })
+    .then(res => res.json())
+    .then(data => {
+      state.user = data
+    })
+  })
 }
 
 const init = () => {
@@ -137,8 +148,8 @@ const init = () => {
     .then(() => {
       fetchTasks()
       .then(data => {
-      state.taskList = data.tasks
-      createTaskListHtml()
+        state.taskList = data.tasks
+        createTaskListHtml()
       })
     })
   })

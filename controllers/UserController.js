@@ -35,8 +35,8 @@ module.exports = {
 
   async getAccount(req, res, next) {
     try {
-      const { name, email, role } = req.user;
-      res.status(200).json({ user: name, email, role });
+      const { name, email, role, id } = req.user;
+      res.status(200).json({ user: name, email, role, id });
     } catch (error) {
       next(error);
     }
