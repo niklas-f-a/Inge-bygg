@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
-const {InvalidCredentials} = require('../error')
+const {InvalidCredentials, TokenExpired} = require('../error')
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -52,6 +52,21 @@ userSchema.static("authenticate", async function({email, password}){
     throw new InvalidCredentials
   }
 })
+
+userSchema.static('verify', function(header){
+  const token = header.replace('Bearer ', '');
+  return jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
+    if(error instanceof jwt.TokenExpiredError){
+      throw new TokenExpired()
+    }else if(error){
+      throw new Error()
+    }else{
+      return decoded
+    }
+  })
+})
+
+
 
 const User = mongoose.model('User', userSchema);
 

@@ -31,7 +31,7 @@ async function seed() {
     password: 'password',
   });
 
-  const tasks = await Task.insertMany([
+  await Task.insertMany([
     {
       task: 'Fixa badkar',
       imageLink: 'www.badkar.se',
