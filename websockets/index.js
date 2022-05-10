@@ -1,14 +1,17 @@
 const {Server} = require('socket.io')
-const userHandler = require('./userHandler')
+const UserHandler = require('./userHandler')
 
 module.exports = server => {
   const io = new Server(server)
 
   io.use((socket, next) => {
-    console.log(socket);
-    // const user = userHandler.authenticate(socket.handshake.auth)
-    console.log(user);
-    next()
+    try{
+      socket.data.user = UserHandler.authenticate(socket.handshake.auth.token)
+      next()
+    }catch(error){
+      next(error)
+    }
+
   })
   io.on('connection', socket => {
 

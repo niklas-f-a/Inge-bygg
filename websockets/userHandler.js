@@ -3,8 +3,14 @@ require('dotenv').config()
 
 module.exports = {
 
-  authenticate(token){
-    return jwt.verify(token, process.env.JWT_SECRET)
+  authenticate: (token) => {
+    return jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
+      if(error){
+        throw new Error('Invalid credentials')
+      }else{
+        return decoded
+      }
+    })
   }
 
 
