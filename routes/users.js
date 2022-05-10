@@ -9,8 +9,6 @@ router.post('/login',
   UserController.login
 );
 
-//patch user
-
 router.post('/',
   Validate.register,
   Auth.authRoles('admin'),
@@ -30,6 +28,11 @@ router.get('/:id',
 router.get('/',
   Auth.authRoles('admin'),
   UserController.getAll
+);
+
+router.patch('/:id',
+  Auth.authRoles('client', 'worker'),
+  UserController.update
 );
 
 router.delete('/:id',

@@ -4,30 +4,33 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 const {InvalidCredentials, TokenExpired} = require('../error')
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      unique: true
+    },
+    role: {
+      type: String,
+      enum: ['admin', 'worker', 'client'],
+      default: 'client',
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: 6,
+      trim: true,
+      select: false,
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    lowercase: true,
-    unique: true
-  },
-  role: {
-    type: String,
-    enum: ['admin', 'worker', 'client'],
-    default: 'client',
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 6,
-    trim: true,
-    select: false,
-  },
-});
+  { timestamps: true }
+);
 
 userSchema.pre('save', function (next) {
   this.password = bcrypt.hashSync(this.password, 10);

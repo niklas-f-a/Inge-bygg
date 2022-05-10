@@ -121,9 +121,12 @@ module.exports = {
 
   async updateTask(req, res, next) {
     try {
-      const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-      });
+      const task = await Task.findByIdAndUpdate(req.params.id, req.body,
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
       if (!task) {
         throw new ResourceNotFound('Task');
       }
