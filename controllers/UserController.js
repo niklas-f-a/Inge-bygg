@@ -76,6 +76,28 @@ module.exports = {
     }
   },
 
+  async update(req, res, next) {
+    try {
+      const user = await User.findByIdAndUpdate(req.params.id,
+        {
+        name: req.body.name,
+        email: req.body.email
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+      if (!user) {
+        throw new ResourceNotFound('User');
+      }
+      res.status(200).json({ message: 'User updated', user });
+    } catch (error) {
+      next(error);
+    }
+  },
+
+
   async delete(req, res, next) {
     try {
       const user = await User.findByIdAndRemove(req.params.id);
