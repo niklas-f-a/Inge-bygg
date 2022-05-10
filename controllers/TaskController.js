@@ -1,6 +1,6 @@
 const Task = require('../models/Tasks');
 const User = require('../models/Users')
-const { MissingCredentials, ResourceNotFound } = require('../error');
+const { ResourceNotFound, Forbidden } = require('../error');
 
 module.exports = {
   async getTask(req, res, next) {
@@ -46,7 +46,7 @@ module.exports = {
     }
   },
 
-  async deleteMessage(req, res, next) {//kolla task/message tillhör req.user
+  async deleteMessage(req, res, next) {
     try {
       const { taskId, messageId } = req.params;
       const task = await Task.findById(taskId);
@@ -59,10 +59,15 @@ module.exports = {
       if (!messageToDelete) {
         throw new ResourceNotFound('Message');
       }
-      const index = task.messages.indexOf(messageToDelete);
-      task.messages.splice(index, 1);
-      task.save();
-      res.status(200).json({ message: 'Message deleted', task });
+
+      if(req.user == messageToDelete.sender){
+        const index = task.messages.indexOf(messageToDelete);
+        task.messages.splice(index, 1);
+        task.save();
+        res.status(200).json({ message: 'Message deleted', task });
+      }else{
+        throw new Forbidden();
+      }
     } catch (error) {
       next(error);
     }
@@ -118,7 +123,6 @@ module.exports = {
     try {
       const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
-        runValidators: true,
       });
       if (!task) {
         throw new ResourceNotFound('Task');
