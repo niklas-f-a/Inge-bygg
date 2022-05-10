@@ -16,10 +16,10 @@ module.exports = {
       if(!req.files.imgFile.mimetype.startsWith('image/')){
         throw new ImageError(400, 'Must be of type image')
       }
-      if(fs.existsSync(path.join('public', 'images', req.files.imgFile.name))){
+      if(fs.existsSync(path.join('assets', 'images', req.files.imgFile.name))){
         throw new ImageError(500, 'Image Already exists')
       }else{
-        fs.copyFileSync(req.files.imgFile.tempFilePath, path.join('public', 'images', req.files.imgFile.name))
+        fs.copyFileSync(req.files.imgFile.tempFilePath, path.join('assets', 'images', req.files.imgFile.name))
         res.status(200).json({message: "Image uploaded successfully"})
       }
     }catch(error){
