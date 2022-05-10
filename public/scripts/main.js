@@ -1,20 +1,32 @@
+import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+let socket = io({
+  autoConnect: false
+})
+
+
 let headers
 const BASE_URL = 'http://localhost:5001'
 
 let state = {
   taskList: [],
-  task: {}
+  task: {},
 }
 
 
-
-const saveToken = (token) => {
+const saveToken = token => {
   headers = {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer '+token
   }
 }
 
+
+const addMessage = message => {
+  const article = document.querySelector('article')
+  const p = document.createElement('p')
+  p.innerHTML = `message: ${message}`
+  article.append(p)
+}
 
 
 const createTaskListHtml = () => {
@@ -29,28 +41,37 @@ const createTaskListHtml = () => {
   taskSection.append(ul)
 }
 
-const sendMessage = (id) => {
-  const sendMessageBtn = document.querySelector('.send-message')
-  sendMessageBtn.addEventListener('click', (event) => {
-    const inputField = document.querySelector('.message-content').value
+const createSendMessageForm = () => {
+  const sendMessageForm = document.querySelector('.send-message')
+  sendMessageForm.innerHTML = `
+    <form class="send-message">
+      <input class="message-content" type="text" name="message" placeholder="Enter message" />
+      <button>Send Message</button>
+    </form>
+  `
+  const sendMessageBtn = document.querySelector('.send-message button')
+  const inputField = document.querySelector('.send-message input')
+  document.body.append(sendMessageForm)
+  sendMessageBtn.addEventListener('click', event => {
     event.preventDefault()
-    fetch(BASE_URL+'/tasks/'+id+'/messages', {
+    const content = inputField.value
+    inputField.value = ''
+    fetch(BASE_URL+'/tasks/'+state.task._id+'/messages', {
       method: 'PUT',
       headers: headers,
-      body: JSON.stringify({content: inputField})
+      body: JSON.stringify({content})
     })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data)
+    .then( () => {
+      socket.emit('sendMessage', {id: state.task._id, message: content})
+      addMessage(content)
     })
   })
 }
 
 
-const renderTask = (task) => {
-  console.log(task);
+const renderTask = task => {
   const taskSection = document.querySelector('.tasks')
-  const article = document.createElement('article')
+  const article = document.querySelector('.tasks article')
   article.innerHTML = `task: ${task.task} client: ${task.client.name} worker: ${task.worker.name} done:${task.done}`
   task.messages.forEach(message => {
     const p = document.createElement('p')
@@ -59,18 +80,38 @@ const renderTask = (task) => {
   })
 
   taskSection.append(article)
-  sendMessage(task._id)
+  createSendMessageForm()
 }
 
-const getTask = (id) => {
+const getTask = id => {
+  if(socket.connected){
+    socket.emit('leave-room', state.task._id)
+  }else{
+    socket.connect()
+  }
   fetch(BASE_URL+'/tasks/'+id, {
     method: 'GET',
     headers
   })
   .then(res => res.json())
   .then(data => {
-    renderTask(data.task)
+    state.task = data.task
+    renderTask(state.task)
+    socket.emit('join-room', state.task._id)
   })
+}
+
+
+
+
+
+
+const fetchTasks = () => {
+  return fetch(BASE_URL+'/tasks', {
+    method: 'GET',
+    headers: headers
+  })
+  .then(res => res.json())
 }
 
 
@@ -85,30 +126,24 @@ const login = (email, password) => {
     saveToken(data.token)})
 }
 
-
-
-const fetchTasks = () => {
-  return fetch(BASE_URL+'/tasks', {
-    method: 'GET',
-    headers: headers
-  })
-  .then(res => res.json())
-  .then(data => state.task = data)
-}
-
-
-const loginBtn = document.querySelector('.login-form button')
-loginBtn.addEventListener('click', event => {
-  event.preventDefault()
-  const loginForm = document.querySelector('.login-form')
-  const email = loginForm[0].value
-  const password = loginForm[1].value
-  login(email, password)
-  .then(() => {
-    fetchTasks()
-    .then(data => {
-    state.taskList = data.tasks
-    createTaskListHtml()
+const init = () => {
+  const loginBtn = document.querySelector('.login-form button')
+  loginBtn.addEventListener('click', event => {
+    event.preventDefault()
+    const loginForm = document.querySelector('.login-form')
+    const email = loginForm[0].value
+    const password = loginForm[1].value
+    login(email, password)
+    .then(() => {
+      fetchTasks()
+      .then(data => {
+      state.taskList = data.tasks
+      createTaskListHtml()
+      })
     })
   })
-})
+}
+init()
+
+
+socket.on('receiveMessage', addMessage)

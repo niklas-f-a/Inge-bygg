@@ -1,4 +1,5 @@
 const Task = require('../models/Tasks');
+const User = require('../models/Users')
 const { MissingCredentials, ResourceNotFound } = require('../error');
 
 module.exports = {
@@ -98,7 +99,14 @@ module.exports = {
         client: req.body.clientId,
         worker: req.body.workerId,
       };
-      //check if client and worker exist exist
+      const client = await User.findById(task.client)
+      const worker = await User.findById(task.worker)
+      if (!client) {
+        throw new ResourceNotFound('Client');
+      }
+      if (!worker) {
+        throw new ResourceNotFound('Worker');
+      }
       const newTask = await Task.create(task);
       res.status(200).json({ message: 'Task created', newTask });
     } catch (error) {
