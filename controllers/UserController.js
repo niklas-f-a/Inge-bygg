@@ -19,7 +19,7 @@ module.exports = {
         message: 'User created',
         user: {
           id: user._id,
-          name: name,
+          name,
           email,
           role,
         },
@@ -35,8 +35,8 @@ module.exports = {
 
   async getAccount(req, res, next) {
     try {
-      const { name, email, role } = req.user;
-      res.status(200).json({ user: name, email, role });
+      const { name, email, role, id } = req.user;
+      res.status(200).json({ user: name, email, role, id });
     } catch (error) {
       next(error);
     }
@@ -75,6 +75,28 @@ module.exports = {
       next(error);
     }
   },
+
+  async update(req, res, next) {
+    try {
+      const user = await User.findByIdAndUpdate(req.params.id,
+        {
+        name: req.body.name,
+        email: req.body.email
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+      if (!user) {
+        throw new ResourceNotFound('User');
+      }
+      res.status(200).json({ message: 'User updated', user });
+    } catch (error) {
+      next(error);
+    }
+  },
+
 
   async delete(req, res, next) {
     try {

@@ -1,5 +1,6 @@
 const Task = require('../models/Tasks');
-const { MissingCredentials, ResourceNotFound } = require('../error');
+const User = require('../models/Users')
+const { ResourceNotFound, Forbidden } = require('../error');
 
 module.exports = {
   async getTask(req, res, next) {
@@ -58,10 +59,15 @@ module.exports = {
       if (!messageToDelete) {
         throw new ResourceNotFound('Message');
       }
-      const index = task.messages.indexOf(messageToDelete);
-      task.messages.splice(index, 1);
-      task.save();
-      res.status(200).json({ message: 'Message deleted', task });
+
+      if(req.user == messageToDelete.sender){
+        const index = task.messages.indexOf(messageToDelete);
+        task.messages.splice(index, 1);
+        task.save();
+        res.status(200).json({ message: 'Message deleted', task });
+      }else{
+        throw new Forbidden();
+      }
     } catch (error) {
       next(error);
     }
@@ -98,6 +104,14 @@ module.exports = {
         client: req.body.clientId,
         worker: req.body.workerId,
       };
+      const client = await User.findById(task.client)
+      const worker = await User.findById(task.worker)
+      if (!client) {
+        throw new ResourceNotFound('Client');
+      }
+      if (!worker) {
+        throw new ResourceNotFound('Worker');
+      }
       const newTask = await Task.create(task);
       res.status(200).json({ message: 'Task created', newTask });
     } catch (error) {
@@ -107,14 +121,16 @@ module.exports = {
 
   async updateTask(req, res, next) {
     try {
-      const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true,
-      });
+      const task = await Task.findByIdAndUpdate(req.params.id, req.body,
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
       if (!task) {
         throw new ResourceNotFound('Task');
       }
-      res.status(200).json({ message: 'Task updated', task: { task } });
+      res.status(200).json({ message: 'Task updated', task  });
     } catch (error) {
       next(error);
     }

@@ -11,27 +11,32 @@ router.post('/login',
 
 router.post('/',
   Validate.register,
-  Auth.authRoles(['admin']),
+  Auth.authRoles('admin'),
   UserController.register
 );
 
 router.get('/me',
-  Auth.authRoles(['admin', 'worker', 'client']),
+  Auth.authRoles('admin', 'worker', 'client'),
   UserController.getAccount
 );
 
 router.get('/:id',
-  Auth.authRoles(['admin', 'worker']),
+  Auth.authRoles('admin', 'worker'),
   UserController.getUser
 );
 
 router.get('/',
-  Auth.authRoles(['admin']),
+  Auth.authRoles('admin'),
   UserController.getAll
 );
 
+router.patch('/:id',
+  Auth.authRoles('client', 'worker'),
+  UserController.update
+);
+
 router.delete('/:id',
-  Auth.authRoles(['admin']),
+  Auth.authRoles('admin'),
   UserController.delete
 );
 
