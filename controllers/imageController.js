@@ -12,7 +12,7 @@ module.exports = {
       if(!task){
         throw new ResourceNotFound('Task')
       }
-      if(task.worker != req.user.id){
+      if(task.worker != req.user.id && req.user.role != 'admin'){
         throw new Forbidden()
       }
       if(!imgFile.mimetype.startsWith('image/')){

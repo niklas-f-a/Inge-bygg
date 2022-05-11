@@ -57,7 +57,7 @@ router.post('/:id/images',
     responseOnLimit: JSON.stringify('File size must be less than 5mb')
   }),
   Validate.addImage,
-  Auth.authRoles('worker', 'client'),
+  Auth.authRoles('worker', 'admin'),
   ImageController.addImage
 );
 
