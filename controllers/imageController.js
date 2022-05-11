@@ -12,9 +12,9 @@ module.exports = {
       if(!task){
         throw new ResourceNotFound('Task')
       }
-      if(task.worker != req.user.id){
-        throw new Forbidden()
-      }
+      // if(task.worker != req.user.id){
+      //   throw new Forbidden()
+      // }
       if(!imgFile.mimetype.startsWith('image/')){
         throw new ImageError(400, 'Must be of type image')
       }
