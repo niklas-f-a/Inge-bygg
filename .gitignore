@@ -3,3 +3,6 @@ node_modules
 .DS-Store
 .vscode
 tmp
+.dockerignore
+Dockerfile
+docker-compose.yml
