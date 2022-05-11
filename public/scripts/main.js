@@ -22,10 +22,10 @@ const saveToken = token => {
 }
 
 
-const addMessage = message => {
+const addMessage = ({message, user, date})=> {
   const article = document.querySelector('article')
   const p = document.createElement('p')
-  p.innerHTML = `message: ${message}`
+  p.innerHTML = `message: ${message} sender: ${user.name}  date: ${date}`
   article.append(p)
 }
 
@@ -63,8 +63,8 @@ const createSendMessageForm = () => {
       body: JSON.stringify({content})
     })
     .then( () => {
-      socket.emit('sendMessage', {id: state.task._id, message: content})
-      addMessage(content)
+      socket.emit('sendMessage', {taskId: state.task._id, message: content})
+      // addMessage(content)
     })
   })
 }
@@ -150,6 +150,7 @@ const init = () => {
       .then(data => {
         state.taskList = data.tasks
         createTaskListHtml()
+        loginForm.style.display = 'none'
       })
     })
   })
