@@ -4,7 +4,7 @@ const Validator = require('./Validator')
 const emailRegex =  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const minPasswordLength = 6
 const minNameLength = 2
-const minEmailLength = 2
+const minEmailLength = 5
 const roleEnum = ['client', 'worker']
 
 

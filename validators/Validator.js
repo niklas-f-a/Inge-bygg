@@ -20,7 +20,7 @@ class Validator{
   }
 
   lengthOf(type, string, length){
-    if(!string || !string.length > length){
+    if(!string || string.length < length){
       this.errorMessages.push(`${type} needs to be a minimum of ${length} characters`)
     }
     return this

@@ -9,6 +9,7 @@ module.exports = {
       const {imgFile} = req.files
       const uploadPath = path.join('assets', 'images', imgFile.name)
       const task = await Task.findById(req.params.id)
+
       if(!task){
         throw new ResourceNotFound('Task')
       }
