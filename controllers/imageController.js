@@ -6,10 +6,9 @@ const Task = require('../models/Tasks')
 module.exports = {
   async addImage(req, res, next){
     try{
-      const task = await Task.findById(req.params.id)
       const {imgFile} = req.files
       const uploadPath = path.join('assets', 'images', imgFile.name)
-      console.log(imgFile);
+      const task = await Task.findById(req.params.id)
       if(!task){
         throw new ResourceNotFound('Task')
       }

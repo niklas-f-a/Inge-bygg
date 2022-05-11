@@ -11,22 +11,21 @@ module.exports = server => {
     }catch(error){
       next(error)
     }
-
   })
-  io.on('connection', socket => {
+    .on('connection', socket => {
 
-    socket.on('join-room', (taskId) => {
-      socket.join(taskId)
-    })
+      socket.on('join-room', taskId => {
+        socket.join(taskId)
+      })
 
-    socket.on('leave-room', taskId => {
-      socket.leave(taskId)
-    })
+      socket.on('leave-room', taskId => {
+        socket.leave(taskId)
+      })
 
-                          //task-id
-    socket.on('sendMessage', ({id, message}) => {
-      socket.to(id).emit('receiveMessage', message)
-    })
+      socket.on('sendMessage', ({taskId, message}) => {
+        let date = new Date().toISOString()
+        io.to(taskId).emit('receiveMessage', {message, user: socket.data.user, date})
+      })
 
 
 
