@@ -14,9 +14,8 @@ module.exports = {
   addImage(req, res, next){
     const validate = new Validator()
     validate.exist('image', req.files?.imgFile)
-    const error = validate.error()
-    if(error){
-      res.json({message: error})
+    if(validate.error()){
+      res.json({message: validate.errorMessages})
     }else{
       next()
     }
@@ -26,28 +25,22 @@ module.exports = {
     const validate = new Validator()
     const {content} = req.body
     validate.exist('content', content)
-    const error = validate.error()
-    if(error){
-      res.json({message: error})
+    if(validate.error()){
+      res.json({message: validate.errorMessages})
     }else{
       next()
     }
   },
 
   handleTask(req, res, next){
+    const validate = new Validator()
     const {task, clientId, workerId} = req.body
-    const message = []
-    if(!task){
-      message.push('Task is missing')
-    }
-    if(!clientId){
-      message.push('Missing a client')
-    }
-    if(!workerId){
-      message.push('Missing a worker')
-    }
-    if(message.length > 0){
-      res.json({message})
+    validate.exist('Task', task)
+            .exist('Client id', clientId)
+            .exist('Worker id', workerId)
+
+    if(validate.error()){
+      res.json({message: validate.errorMessages})
     }else{
       next()
     }
@@ -60,26 +53,21 @@ module.exports = {
             .lengthOf('Name', name, minNameLength)
             .lengthOf('Password', password, minPasswordLength)
             .checkEnum('Role', roleEnum, role)
-    const error = validate.error()
-    if(error){
-      res.json({message: error})
+    if(validate.error()){
+      res.json({message: validate.errorMessages})
     }else{
       next()
     }
   },
 
   login(req, res, next){
+    const validate = new Validator()
     const {email, password} = req.body
-    const message = []
-    // const emailIsValid = validateEmail(email)
-    // if(!email || email.length < 3 || emailIsValid == null){
-    //   message.push('Not a Valid Email')
-    // }
-    if(!password || password.length <= minPasswordLength){
-      message.push('password needs a minimum of 6 characters')
-    }
-    if(message.length > 0){
-      res.json({message})
+    validate.charactersOf('Email', email, emailRegex).lengthOf('Email', email, minEmailLength)
+            .lengthOf('Password', password, minPasswordLength)
+
+    if(validate.error()){
+      res.json({message: validate.errorMessages})
     }else{
       next()
     }
