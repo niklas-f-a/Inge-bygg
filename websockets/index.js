@@ -23,7 +23,7 @@ module.exports = server => {
       })
 
       socket.on('sendMessage', ({taskId, message}) => {
-        let date = new Date().toISOString()
+        const date = UserHandler.getDate()
         io.to(taskId).emit('receiveMessage', {message, user: socket.data.user, date})
       })
 

@@ -11,6 +11,10 @@ module.exports = {
         return decoded
       }
     })
+  },
+
+  getDate: () => {
+    return new Date().toISOString()
   }
 
 
