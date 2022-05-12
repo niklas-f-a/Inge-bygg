@@ -25,9 +25,13 @@ module.exports = {
       if (!task) {
         throw new ResourceNotFound('Task');
       }
-      task.messages.push({ content, sender: req.user.name });
-      task.save();
-      res.status(200).json({ message: 'Message added', task });
+      if(task.client == req.user.id || task.worker == req.user.id){
+        task.messages.push({ content, sender: req.user.name });
+        task.save();
+        res.status(200).json({ message: 'Message added', task });
+      }else{
+        throw new Forbidden();
+      }
     } catch (error) {
       next(error);
     }
