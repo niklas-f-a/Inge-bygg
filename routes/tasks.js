@@ -63,7 +63,6 @@ router.post('/:id/images',
 
 router.get('/:id/images',
   Auth.authRoles('worker', 'client', 'admin'),
-  //add validation
   ImageController.getImage
 )
 

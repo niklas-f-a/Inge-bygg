@@ -32,7 +32,7 @@ router.get('/',
 
 router.patch('/:id',
   Auth.authRoles('client', 'worker'),
-  //add validations
+  Validate.updateUser,
   UserController.update
 );
 
