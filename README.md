@@ -10,7 +10,7 @@
 | GET /users/me                  | --                                                     | client, worker, admin | User object: id, email, name, role               |
 | GET /users               | Possible query params: page          | admin         | Array: users                                     |
 | GET /users/:id           | --                                                     | worker, admin | User object: id, email, name, role               |
-| PATCH /users/:id         | Req body:email name    | client, worker                 | message: User updated  , Updated User object: id, email, name, role               |
+| PATCH /users/me         | Req body:email name    | client, worker                 | message: User updated  , Updated User object: id, email, name, role               |
 | DELETE /users/:id        | --                                                     | admin                 | message: User is no more    |
 | POST /tasks              | Req body: task clientId workerId imageLink(optional)                        | worker                | message: Task created, Task object|
 | GET /tasks               | --   | client, worker, admin        | Array of own task objects. If admin, array of every task.                        |
