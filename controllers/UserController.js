@@ -59,18 +59,15 @@ module.exports = {
     try {
       const maxPageSize = 10;
       const page = req.query.page || 1;
-      let pageSize = req.query.pageSize || 10;
+      let pageSize = req.query.pageSize || maxPageSize;
       if (pageSize > maxPageSize) {
-        pageSize = 10;
+        pageSize = maxPageSize;
       }
       const users = await User.find({})
         .skip((page - 1) * pageSize)
         .limit(pageSize)
         .exec();
-      res.status(200).json({
-        results: users.length,
-        users,
-      });
+      res.status(200).json({users});
     } catch (error) {
       next(error);
     }
@@ -78,19 +75,16 @@ module.exports = {
 
   async update(req, res, next) {
     try {
-      const user = await User.findByIdAndUpdate(req.params.id,
+      const user = await User.findByIdAndUpdate(req.user.id,
         {
-        name: req.body.name,
-        email: req.body.email
+          name: req.body.name,
+          email: req.body.email
         },
         {
           new: true,
           runValidators: true,
         }
       );
-      if (!user) {
-        throw new ResourceNotFound('User');
-      }
       res.status(200).json({ message: 'User updated', user });
     } catch (error) {
       next(error);

@@ -79,7 +79,21 @@ module.exports = {
     }else{
       next()
     }
-  }
+  },
 
+  updateUser(req, res, next){
+    const validate = new Validator()
+    const {name, email} = req.body
+    validate
+      .lengthOf('Name', name, minNameLength)
+      .charactersOf('Email', email, emailRegex)
+      .lengthOf('Email', email, minEmailLength)
+
+    if(validate.error()){
+      res.json({message: validate.errorMessages})
+    }else{
+      next()
+    }
+  }
 
 }

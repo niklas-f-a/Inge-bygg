@@ -21,7 +21,7 @@ router.get('/me',
 );
 
 router.get('/:id',
-  Auth.authRoles('admin', 'worker'),
+  Auth.authRoles('admin'),
   UserController.getUser
 );
 
@@ -30,9 +30,9 @@ router.get('/',
   UserController.getAll
 );
 
-router.patch('/:id',
+router.patch('/me',
   Auth.authRoles('client', 'worker'),
-  //add validations
+  Validate.updateUser,
   UserController.update
 );
 
