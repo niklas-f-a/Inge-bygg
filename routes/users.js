@@ -10,8 +10,8 @@ router.post('/login',
 );
 
 router.post('/',
-  Validate.register,
   Auth.authRoles('admin'),
+  Validate.register,
   UserController.register
 );
 
@@ -32,6 +32,7 @@ router.get('/',
 
 router.patch('/:id',
   Auth.authRoles('client', 'worker'),
+  //add validations
   UserController.update
 );
 
