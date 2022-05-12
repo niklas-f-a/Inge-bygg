@@ -18,8 +18,8 @@ router.get('/:id',
 );
 
 router.post('/',
-  Validate.handleTask,
   Auth.authRoles('worker'),
+  Validate.handleTask,
   TaskController.createTask
 );
 
@@ -29,14 +29,14 @@ router.delete('/:id',
 );
 
 router.patch('/:id',
-  Validate.handleTask,
   Auth.authRoles('worker'),
+  Validate.handleTask,
   TaskController.updateTask
 );
 
 router.put('/:id/messages',
-  Validate.addMessage,
   Auth.authRoles('worker', 'client'),
+  Validate.addMessage,
   TaskController.addMessage
 );
 
@@ -56,9 +56,14 @@ router.post('/:id/images',
     abortOnLimit: true,
     responseOnLimit: JSON.stringify('File size must be less than 5mb')
   }),
+  Auth.authRoles('worker', 'client', 'admin'),
   Validate.addImage,
-  Auth.authRoles('worker', 'admin'),
   ImageController.addImage
 );
+
+router.get('/:id/images',
+  Auth.authRoles('worker', 'client', 'admin'),
+  ImageController.getImage
+)
 
 module.exports = router;

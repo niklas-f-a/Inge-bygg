@@ -14,6 +14,7 @@ module.exports = {
   addImage(req, res, next){
     const validate = new Validator()
     validate.exist('image', req.files?.imgFile)
+
     if(validate.error()){
       res.json({message: validate.errorMessages})
     }else{
@@ -25,6 +26,7 @@ module.exports = {
     const validate = new Validator()
     const {content} = req.body
     validate.exist('content', content)
+
     if(validate.error()){
       res.json({message: validate.errorMessages})
     }else{
@@ -35,9 +37,10 @@ module.exports = {
   handleTask(req, res, next){
     const validate = new Validator()
     const {task, clientId, workerId} = req.body
-    validate.exist('Task', task)
-            .exist('Client id', clientId)
-            .exist('Worker id', workerId)
+    validate
+      .exist('Task', task)
+      .exist('Client id', clientId)
+      .exist('Worker id', workerId)
 
     if(validate.error()){
       res.json({message: validate.errorMessages})
@@ -49,10 +52,13 @@ module.exports = {
   register(req, res, next){
     const validate = new Validator()
     const {name, email, password, role} = req.body
-    validate.charactersOf('Email', email, emailRegex).lengthOf('Email', email, minEmailLength)
-            .lengthOf('Name', name, minNameLength)
-            .lengthOf('Password', password, minPasswordLength)
-            .checkEnum('Role', roleEnum, role)
+    validate
+      .charactersOf('Email', email, emailRegex)
+      .lengthOf('Email', email, minEmailLength)
+      .lengthOf('Name', name, minNameLength)
+      .lengthOf('Password', password, minPasswordLength)
+      .checkEnum('Role', roleEnum, role)
+
     if(validate.error()){
       res.json({message: validate.errorMessages})
     }else{
@@ -63,8 +69,25 @@ module.exports = {
   login(req, res, next){
     const validate = new Validator()
     const {email, password} = req.body
-    validate.charactersOf('Email', email, emailRegex).lengthOf('Email', email, minEmailLength)
-            .lengthOf('Password', password, minPasswordLength)
+    validate
+      .charactersOf('Email', email, emailRegex)
+      .lengthOf('Email', email, minEmailLength)
+      .lengthOf('Password', password, minPasswordLength)
+
+    if(validate.error()){
+      res.json({message: validate.errorMessages})
+    }else{
+      next()
+    }
+  },
+
+  updateUser(req, res, next){
+    const validate = new Validator()
+    const {name, email} = req.body
+    validate
+      .lengthOf('Name', name, minNameLength)
+      .charactersOf('Email', email, emailRegex)
+      .lengthOf('Email', email, minEmailLength)
 
     if(validate.error()){
       res.json({message: validate.errorMessages})
@@ -72,6 +95,5 @@ module.exports = {
       next()
     }
   }
-
 
 }

@@ -23,6 +23,8 @@ module.exports = {
         throw new ImageError(500, 'Image Already exists')
       }else{
         imgFile.mv(uploadPath, error => {
+          task.imageLink = imgFile.name
+          task.save()
           if(error){
             throw new ImageError(500, 'File not uploaded')
           }else{
@@ -33,6 +35,26 @@ module.exports = {
     }catch(error){
       next(error)
     }
+  },
 
+  async getImage(req, res, next){
+    try{
+      const task = await Task.findById(req.params.id)
+      if(!task){
+        throw new ResourceNotFound('Task')
+      }
+      if(task.worker != req.user.id && req.user.role != 'admin'){
+        throw new Forbidden()
+      }
+
+      const imgPath = path.join('assets', 'images', task.imageLink)
+      if(!fs.existsSync(imgPath)){
+        throw new ImageError(404, 'Image not found')
+      }
+
+      res.sendFile(path.resolve(imgPath))
+    }catch(error){
+      next(error)
+    }
   }
 }

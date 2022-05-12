@@ -14,7 +14,7 @@ class Validator{
 
   checkEnum(type, array, string){
     if(!string || !array.includes(string)){
-      this.errorMessages.push(`${type} must be either ${array.map(i => i).join(' or ')}`)
+      this.errorMessages.push(`${type} must be either ${array.join(' or ')}`)
     }
     return this
   }
