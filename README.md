@@ -21,3 +21,4 @@
 | GET /tasks/:id/messages  | --                      | client, worker, admin        | Array of messages          |
 | DELETE /tasks/:taskId/messages/:messageId     | --                                                     | client, worker        | message: Message deleted, Task object |
 | POST /tasks/:id/images    | multi-part-form imageFile               | worker, client               | message: Image uploaded successfully                 |
+| GET /tasks/:id/images    | --              | worker, client, admin               | image                 |
