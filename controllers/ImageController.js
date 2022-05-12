@@ -40,15 +40,15 @@ module.exports = {
   async getImage(req, res, next){
     try{
       const task = await Task.findById(req.params.id)
-      const imgPath = path.join('assets', 'images', task.imageLink)
-
       if(!task){
         throw new ResourceNotFound('Task')
       }
       if(task.worker != req.user.id && req.user.role != 'admin'){
         throw new Forbidden()
       }
-      if(task.imageLink.length < 1){
+
+      const imgPath = path.join('assets', 'images', task.imageLink)
+      if(!fs.existsSync(imgPath)){
         throw new ImageError(404, 'Image not found')
       }
 
