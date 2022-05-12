@@ -2,8 +2,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const Task = require('../models/Tasks');
 const User = require('../models/Users');
-const fs = require('fs')
-const path = require('path')
+
 
 async function seed() {
   await mongoose.connect(process.env.DATABASE_URL);
