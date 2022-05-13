@@ -9,9 +9,12 @@ module.exports = {
       const task = await Task.findById(id)
         .populate('worker')
         .populate('client');
-
       if (!task) throw new ResourceNotFound('Task');
-      res.status(200).json({ task });
+      if(task.client._id == req.user.id || task.worker._id == req.user.id || req.user.role == 'admin'){
+        res.status(200).json({ task });
+      }else{
+        throw new Forbidden();
+      }
     } catch (error) {
       next(error);
     }
@@ -44,7 +47,11 @@ module.exports = {
       if (!task) {
         throw new ResourceNotFound('Task');
       }
-      res.status(200).json({ Messages: task.messages });
+      if(task.client._id == req.user.id || task.worker._id == req.user.id || req.user.role == 'admin'){
+        res.status(200).json({ Messages: task.messages });
+      }else{
+        throw new Forbidden();
+      }
     } catch (error) {
       next(error);
     }
@@ -63,8 +70,7 @@ module.exports = {
       if (!messageToDelete) {
         throw new ResourceNotFound('Message');
       }
-
-      if(req.user == messageToDelete.sender){
+      if(req.user.name == messageToDelete.sender || req.user.role == 'admin'){
         const index = task.messages.indexOf(messageToDelete);
         task.messages.splice(index, 1);
         task.save();
@@ -106,15 +112,11 @@ module.exports = {
         task: req.body.task,
         imageLink: req.body.imageLink,
         client: req.body.clientId,
-        worker: req.body.workerId,
+        worker: req.user.id,
       };
       const client = await User.findById(task.client)
-      const worker = await User.findById(task.worker)
       if (!client) {
         throw new ResourceNotFound('Client');
-      }
-      if (!worker) {
-        throw new ResourceNotFound('Worker');
       }
       const newTask = await Task.create(task);
       res.status(200).json({ message: 'Task created', newTask });
@@ -134,6 +136,7 @@ module.exports = {
       if (!task) {
         throw new ResourceNotFound('Task');
       }
+
       res.status(200).json({ message: 'Task updated', task  });
     } catch (error) {
       next(error);
