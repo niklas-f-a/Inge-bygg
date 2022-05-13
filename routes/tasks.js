@@ -46,7 +46,7 @@ router.get('/:id/messages',
 );
 
 router.delete('/:taskId/messages/:messageId',
-  Auth.authRoles('worker', 'client'),
+  Auth.authRoles('worker', 'client', 'admin'),
   TaskController.deleteMessage
 );
 
@@ -56,7 +56,7 @@ router.post('/:id/images',
     abortOnLimit: true,
     responseOnLimit: JSON.stringify('File size must be less than 5mb')
   }),
-  Auth.authRoles('worker', 'client', 'admin'),
+  Auth.authRoles('worker'),
   Validate.addImage,
   ImageController.addImage
 );
@@ -64,6 +64,11 @@ router.post('/:id/images',
 router.get('/:id/images',
   Auth.authRoles('worker', 'client', 'admin'),
   ImageController.getImage
+)
+
+router.delete('/:id/images',
+  Auth.authRoles('admin'),
+  ImageController.deleteImage
 )
 
 module.exports = router;

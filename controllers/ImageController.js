@@ -13,7 +13,7 @@ module.exports = {
       if(!task){
         throw new ResourceNotFound('Task')
       }
-      if(task.worker != req.user.id && req.user.role != 'admin'){
+      if(task.worker != req.user.id){
         throw new Forbidden()
       }
       if(!imgFile.mimetype.startsWith('image/')){
@@ -43,7 +43,9 @@ module.exports = {
       if(!task){
         throw new ResourceNotFound('Task')
       }
-      if(task.worker != req.user.id && req.user.role != 'admin'){
+      if(task.worker != req.user.id ||
+          task.client != req.user.id ||
+          req.user.role != 'admin'){
         throw new Forbidden()
       }
 
@@ -53,6 +55,24 @@ module.exports = {
       }
 
       res.sendFile(path.resolve(imgPath))
+    }catch(error){
+      next(error)
+    }
+  },
+
+  async deleteImage(req, res, next){
+    try{
+      const task = await Task.findById(req.params.id)
+      if(!task){
+        throw new ResourceNotFound('Task')
+      }
+      if(task.imageLink.length < 1){
+        throw new ImageError(404, 'Task has no image')
+      }
+      fs.unlinkSync(path.join('assets', 'images', task.imageLink))
+      task.imageLink = ''
+      task.save()
+      res.status(200).json({message: 'Image deleted'})
     }catch(error){
       next(error)
     }

@@ -40,7 +40,6 @@ module.exports = {
     validate
       .exist('Task', task)
       .exist('Client id', clientId)
-      .exist('Worker id', workerId)
 
     if(validate.error()){
       res.json({message: validate.errorMessages})
